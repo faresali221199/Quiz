@@ -1,0 +1,71 @@
+﻿@model IEnumerable<Quiz.Models.Result>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "كشف درجات الطلاب الأكاديمي";
+}
+
+<div style="padding: 25px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; min-height: 100vh;">
+    <div style="background: #2c3e50; padding: 20px 30px; border-radius: 15px; color: white; display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.15);">
+        <div>
+            <h4 style="margin:0; font-size: 1.4rem;">📊 كشف درجات الطلاب</h4>
+            <p style="margin: 5px 0 0; font-size: 0.9rem; color: #bdc3c7;">عرض البيانات الأكاديمية المرتبة حسب السكشن</p>
+        </div>
+        <a href="/Admin/Dashboard" style="background: rgba(255,255,255,0.1); color: white; padding: 10px 20px; border-radius: 10px; text-decoration: none; font-weight: bold; transition: 0.3s;" onmouseover="this.style.background='rgba(255,255,255,0.2)'" onmouseout="this.style.background='rgba(255,255,255,0.1)'">🔙 العودة للوحة التحكم</a>
+    </div>
+
+    <div style="background: white; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); overflow: hidden; border: 1px solid #e2e8f0;">
+        <table style="width: 100%; text-align: right; border-collapse: collapse;">
+            <thead>
+                <tr style="background: #f8fafc; border-bottom: 2px solid #edf2f7;">
+                    <th style="padding: 20px; color: #4a5568; font-weight: 700;">الطالب والكود الجامعي</th>
+                    <th style="padding: 20px; color: #4a5568; font-weight: 700; text-align: center;">السكشن</th>
+                    <th style="padding: 20px; color: #4a5568; font-weight: 700; text-align: center;">الدرجة الكلية</th>
+                    <th style="padding: 20px; color: #4a5568; font-weight: 700; text-align: center;">وقت البدء</th>
+                    <th style="padding: 20px; color: #4a5568; font-weight: 700; text-align: center;">الإجراء</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Any())
+                {
+                    @foreach (var res in Model)
+                    {
+                        <tr style="border-bottom: 1px solid #f1f5f9; transition: 0.2s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='white'">
+                            <td style="padding: 20px;">
+                                <div style="font-weight: bold; color: #2d3748; font-size: 1.05rem;">@(res.User?.FullName ?? "طالب محذوف")</div>
+                                <div style="font-size: 0.85rem; color: #718096; margin-top: 4px;">🆔 كود: @(res.User?.AcademicID ?? "غير مسجل")</div>
+                            </td>
+
+                            <td style="padding: 20px; text-align: center;">
+                                <span style="background: #edf2f7; color: #4a5568; padding: 5px 12px; border-radius: 8px; font-weight: 600; font-size: 0.9rem;">
+                                    @* تم التعديل هنا لاستخدام ToString() لتجنب خطأ الكاست *@
+                                    سكشن @(res.User?.Section.ToString() ?? "---")
+                                </span>
+                            </td>
+
+                            <td style="padding: 20px; text-align: center;">
+                                <div style="color: #2ecc71; font-weight: 800; font-size: 1.2rem;">@res.TotalScore <span style="font-size: 0.8rem; color: #a0aec0;">/ 10</span></div>
+                            </td>
+
+                            <td style="padding: 20px; text-align: center; color: #718096; font-size: 0.9rem;">
+                                @(res.StartTime.HasValue? res.StartTime.Value.ToString("yyyy-MM-dd HH:mm") : "---")
+                            </td>
+
+                            <td style="padding: 20px; text-align: center;">
+                                <a href="https://wa.me/@res.User?.Phone" target="_blank" title="تواصل عبر واتساب" style="text-decoration: none; color: #25d366; font-size: 1.3rem;">💬</a>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="5" style="padding: 60px; text-align: center;">
+                            <div style="font-size: 3rem; margin-bottom: 15px;">🔍</div>
+                            <div style="color: #a0aec0; font-size: 1.1rem;">لا توجد نتائج مسجلة حتى الآن في السجلات الأكاديمية.</div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

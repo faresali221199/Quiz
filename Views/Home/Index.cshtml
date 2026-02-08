@@ -1,0 +1,144 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>نظام الاختبارات الإلكترونية</title>
+    <style>
+        :root {
+            --primary: #6a11cb;
+            --secondary: #2575fc;
+            --admin-btn: linear-gradient(135deg, #ff416c, #ff4b2b);
+            --student-btn: linear-gradient(135deg, #42e695, #3bb2b8);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            overflow: hidden;
+        }
+
+        @@keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .main-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 50px 40px;
+            border-radius: 25px;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            width: 90%;
+            max-width: 600px;
+            color: white;
+            transition: transform 0.3s ease;
+        }
+
+        .main-container:hover {
+            transform: translateY(-5px);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.2);
+        }
+
+        p {
+            margin-bottom: 40px;
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .buttons-container {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 15px 35px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            text-decoration: none;
+            color: white;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            min-width: 220px;
+            justify-content: center;
+        }
+
+        .btn-admin {
+            background: var(--admin-btn);
+        }
+
+        .btn-student {
+            background: var(--student-btn);
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+        }
+
+        .btn:active {
+            transform: scale(0.95);
+        }
+
+        @@media (max-width: 768px) {
+            .buttons-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            .btn {
+                width: 100%;
+            }
+            h1 { font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <h1>🎓 منصة الاختبارات الذكية</h1>
+        <p>مرحباً بك في مستقبل التعلم الإلكتروني</p>
+
+        <div class="buttons-container">
+            <a href="/Admin/Login" class="btn btn-admin">
+                <span>👑</span> دخول لوحة الإدارة
+            </a>
+
+            <a href="/Student/Login" class="btn btn-student">
+                <span>🎓</span> دخول الطالب
+            </a>
+        </div>
+
+        <div style="margin-top: 30px; font-size: 0.8rem; opacity: 0.6;">
+            © 2026 جميع الحقوق محفوظة لـ @@Fares Ali
+        </div>
+    </div>
+</body>
+</html>

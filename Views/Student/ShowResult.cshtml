@@ -1,0 +1,169 @@
+﻿@model Quiz.Models.Result
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="utf-8" />
+    <title>نتيجتك النهائية</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --primary: #6a11cb;
+            --secondary: #2575fc;
+            --accent: #42e695;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            min-height: 100vh;
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            animation: slideUp 0.6s ease;
+        }
+
+        .result-card {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(15px);
+            border-radius: 30px;
+            padding: 40px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+
+        .score-circle {
+            width: 140px;
+            height: 140px;
+            border: 6px solid var(--accent);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 20px auto;
+            background: rgba(255, 255, 255, 0.1);
+            font-weight: bold;
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .stat-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+            .stat-item label {
+                display: block;
+                font-size: 0.8rem;
+                opacity: 0.8;
+                margin-bottom: 5px;
+            }
+
+        table {
+            width: 100%;
+            margin-top: 30px;
+            border-collapse: collapse;
+            background: rgba(255,255,255,0.05);
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: right;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .btn-home {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 15px 40px;
+            background: white;
+            color: var(--secondary);
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+            .btn-home:hover {
+                transform: scale(1.05);
+                box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            }
+
+        @@keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="result-card">
+            <h1 style="margin: 0;">🎉 مبروك يا بطل!</h1>
+            <div class="score-circle">
+                <span style="font-size: 3rem;">@Model.TotalScore</span>
+                <small>من 10</small>
+            </div>
+            <div style="font-size: 1.2rem; font-weight: bold; color: var(--accent);">نسبة نجاحك: @(Model.TotalScore * 10)%</div>
+
+            <div class="stat-grid">
+                <div class="stat-item"><label>الاسم</label><strong>@Model.User?.FullName</strong></div>
+                <div class="stat-item"><label>الكود</label><strong>@Model.User?.AcademicID</strong></div>
+                <div class="stat-item"><label>الوقت</label><strong>@ViewBag.DurationFormatted</strong></div>
+            </div>
+
+            @if (ViewBag.WrongDetails != null)
+            {
+                <h3 style="margin-top: 40px; color: #ffeb3b;">❌ مراجعة الأخطاء</h3>
+                <table>
+                    <thead><tr><th>السؤال</th><th>إجابتك</th><th>الصح</th></tr></thead>
+                    <tbody>
+                        @foreach (var item in ViewBag.WrongDetails)
+                        {
+                            <tr>
+                                <td>@item.GetProperty("Question").GetString()</td>
+                                <td style="color: #ff5252;">@item.GetProperty("Yours").GetString()</td>
+                                <td style="color: #42e695;">@item.GetProperty("Correct").GetString()</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            <a href="/Student/SelectSubject" class="btn-home">العودة للمواد الدراسية</a>
+        </div>
+    </div>
+    <script>
+        // تشغيل احتفال لو الدرجة عالية
+        if (@Model.TotalScore >= 5) {
+            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+        }
+    </script>
+</body>
+</html>

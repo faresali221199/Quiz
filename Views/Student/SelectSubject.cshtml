@@ -1,0 +1,82 @@
+﻿@model IEnumerable<Quiz.Models.Subject>
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="utf-8" />
+    <title>اختر المادة الدراسية</title>
+    <style>
+        :root {
+            --primary: #6a11cb;
+            --secondary: #2575fc;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            min-height: 100vh;
+            font-family: 'Segoe UI', sans-serif;
+            color: white;
+            padding: 40px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: 0.3s;
+            text-decoration: none;
+            color: white;
+            display: block;
+        }
+
+            .card:hover {
+                transform: translateY(-10px);
+                background: rgba(255,255,255,0.2);
+            }
+
+        .icon {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📚 المواد المتاحة لك</h1>
+        <p>بناءً على سنتك الدراسية والترم الحالي</p>
+    </div>
+
+    <div class="grid">
+        @foreach (var item in Model)
+        {
+            @* الرابط ده هيروح لصفحة المحاضرات اللي لسه هنعملها *@
+            <a href="/Student/SelectLecture?subjectId=@item.SubjectId" class="card">
+                <span class="icon">📖</span>
+                <h3>@item.SubjectName</h3>
+                <div style="margin-top: 15px; font-size: 0.8rem; background: #42e695; color: #1a1a1a; padding: 5px; border-radius: 50px; font-weight: bold;">
+                    فتح المادة
+                </div>
+            </a>
+        }
+    </div>
+</body>
+</html>

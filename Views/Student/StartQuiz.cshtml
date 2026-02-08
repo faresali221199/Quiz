@@ -1,0 +1,246 @@
+﻿@model IEnumerable<Quiz.Models.Question>
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="utf-8" />
+    <title>الاختبار المباشر | تجربة تفاعلية</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #6a11cb;
+            --secondary: #2575fc;
+            --accent: #42e695;
+            --glass: rgba(255, 255, 255, 0.15);
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        /* حاوية الاختبار الزجاجية */
+        .quiz-card {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            width: 95%;
+            max-width: 650px;
+            padding: 40px;
+            border-radius: 30px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            position: relative;
+            z-index: 100; /* لضمان ظهورها فوق أي تأثيرات خلفية */
+        }
+
+        .timer-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 6px;
+            background: var(--accent);
+            width: 100%;
+            transition: width 1s linear;
+            border-radius: 30px 30px 0 0;
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            font-weight: 500;
+            opacity: 0.9;
+        }
+
+        .question-item {
+            display: none;
+        }
+
+            .question-item.active {
+                display: block;
+                animation: slideUp 0.5s ease;
+            }
+
+        /* تعديل الخيارات لضمان سهولة الضغط */
+        .options-list {
+            margin-top: 20px;
+        }
+
+        .option-label {
+            display: block;
+            position: relative;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 18px 25px;
+            margin: 15px 0;
+            border-radius: 15px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            color: white;
+            z-index: 110; /* جعل الخيار فوق أي شيء آخر */
+        }
+
+            .option-label:hover {
+                background: rgba(255, 255, 255, 0.2);
+                transform: translateX(-8px);
+                border-color: rgba(255,255,255,0.3);
+            }
+
+            .option-label.selected {
+                border-color: var(--accent);
+                background: rgba(66, 230, 149, 0.25);
+                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            }
+
+        /* إخفاء الراديو الأصلي وجعل المنطقة كلها قابلة للضغط */
+        input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            cursor: pointer;
+            margin: 0;
+        }
+
+        .btn-next {
+            width: 100%;
+            padding: 18px;
+            background: var(--accent);
+            color: #1a1a1a;
+            border: none;
+            border-radius: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 25px;
+            font-size: 1.2rem;
+            transition: 0.3s;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+            .btn-next:hover:not(:disabled) {
+                transform: scale(1.02);
+                filter: brightness(1.1);
+            }
+
+            .btn-next:disabled {
+                opacity: 0.3;
+                cursor: not-allowed;
+                background: #eee;
+            }
+
+        @@keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-card">
+        <div class="timer-bar" id="progressBar"></div>
+
+        <form id="quizForm" action="/Student/SubmitQuiz" method="post">
+            <input type="hidden" name="lectureId" value="@ViewBag.LectureId" />
+
+            @{
+                var qList = Model.ToList();
+            }
+            @for (int i = 0; i < qList.Count; i++)
+            {
+                <div class="question-item @(i == 0 ? "active" : "")" id="q-@i">
+                    <div class="question-header">
+                        <span><i class="fas fa-list-ol"></i> سؤال @(i + 1) من @qList.Count</span>
+                        <span><i class="far fa-clock"></i> <span class="time-val">30</span> ثانية</span>
+                    </div>
+
+                    <h3 style="margin-bottom: 30px;">@qList[i].QuestionText</h3>
+
+                    <div class="options-list">
+                        @foreach (var ans in qList[i].Answers)
+                        {
+                            <label class="option-label">
+                                <input type="radio" name="answers[@qList[i].QuestionId]" value="@ans.AnswerId" onchange="enableNext(@i, this)">
+                                <span>@ans.AnswerText</span>
+                            </label>
+                        }
+                    </div>
+
+                    @if (i < qList.Count - 1)
+                    {
+                        <button type="button" class="btn btn-next" id="btn-@i" disabled onclick="nextQuestion(@i)">
+                            السؤال التالي <i class="fas fa-chevron-left"></i>
+                        </button>
+                    }
+                    else
+                    {
+                        <button type="submit" class="btn btn-next" id="btn-@i" disabled>
+                            إنهاء الاختبار وإظهار النتيجة ✅
+                        </button>
+                    }
+                </div>
+            }
+        </form>
+    </div>
+
+    <script>
+        let currentQ = 0;
+        let timeLeft = 30;
+        const totalQs = @qList.Count;
+
+        function startTimer() {
+            timeLeft = 30;
+            document.getElementById('progressBar').style.transition = 'none';
+            document.getElementById('progressBar').style.width = "100%";
+            setTimeout(() => {
+                document.getElementById('progressBar').style.transition = 'width 1s linear';
+            }, 50);
+        }
+
+        const timerInterval = setInterval(() => {
+            timeLeft--;
+            const activeTimeSpan = document.querySelector('.question-item.active .time-val');
+            if(activeTimeSpan) activeTimeSpan.innerText = timeLeft;
+
+            document.getElementById('progressBar').style.width = (timeLeft / 30 * 100) + "%";
+
+            if (timeLeft <= 0) {
+                if (currentQ < totalQs - 1) nextQuestion(currentQ);
+                else document.getElementById('quizForm').submit();
+            }
+        }, 1000);
+
+        function enableNext(index, el) {
+            document.getElementById('btn-' + index).disabled = false;
+            const parentList = el.closest('.options-list');
+            parentList.querySelectorAll('.option-label').forEach(l => l.classList.remove('selected'));
+            el.parentElement.classList.add('selected');
+        }
+
+        function nextQuestion(index) {
+            document.getElementById('q-' + index).classList.remove('active');
+            currentQ++;
+            document.getElementById('q-' + currentQ).classList.add('active');
+            startTimer();
+        }
+
+        startTimer();
+    </script>
+</body>
+</html>

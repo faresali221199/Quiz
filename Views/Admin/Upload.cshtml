@@ -1,0 +1,75 @@
+﻿@{
+    ViewData["Title"] = "رفع الأسئلة";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="admin-nav" style="background: #2c3e50; padding: 15px 25px; border-radius: 10px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; color: white; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+    <div style="font-weight: bold; font-size: 1.1rem;">📤 بوابة رفع البيانات</div>
+    <a href="/Admin/Dashboard" style="color: white; text-decoration: none; font-weight: bold; display: flex; align-items: center; gap: 5px;">
+        <span>🔙</span> العودة للوحة التحكم
+    </a>
+</div>
+
+<div class="upload-card" style="max-width: 600px; margin: 0 auto; background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+
+    @if (ViewBag.Error != null)
+    {
+        <div style="color: #721c24; background: #f8d7da; padding: 15px; margin-bottom: 25px; border-radius: 8px; border: 1px solid #f5c6cb; text-align: center; font-weight: bold;">
+            ⚠️ @ViewBag.Error
+        </div>
+    }
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div style="color: #155724; background: #d4edda; padding: 15px; margin-bottom: 25px; border-radius: 8px; border: 1px solid #c3e6cb; text-align: center; font-weight: bold;">
+            ✅ @TempData["SuccessMessage"]
+        </div>
+    }
+
+    <form action="/Admin/Upload" method="post" enctype="multipart/form-data">
+
+        <div style="margin-bottom: 20px;">
+            <label style="display:block; margin-bottom:10px; font-weight: 600; color: #34495e;">السنة الدراسية:</label>
+            <select name="yearId" required style="width:100%; padding:14px; border-radius:10px; border:2px solid #edf2f7; background: #f8fafc; outline: none; transition: border-color 0.3s;">
+                <option value="">-- اختر السنة --</option>
+                <option value="1">السنة الأولى</option>
+                <option value="2">السنة الثانية</option>
+                <option value="3">السنة الثالثة</option>
+                <option value="4">السنة الرابعة</option>
+            </select>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <label style="display:block; margin-bottom:10px; font-weight: 600; color: #34495e;">الترم الدراسي:</label>
+            <select name="term" required style="width:100%; padding:14px; border-radius:10px; border:2px solid #edf2f7; background: #f8fafc; outline: none; transition: border-color 0.3s;">
+                <option value="1">الترم الأول</option>
+                <option value="2">الترم الثاني</option>
+            </select>
+        </div>
+
+        <div style="margin-bottom: 35px;">
+            <label style="display:block; margin-bottom:10px; font-weight: 600; color: #34495e;">ملف الأسئلة (JSON):</label>
+            <div style="position: relative;">
+                <input type="file" name="jsonFile" accept=".json" required
+                       style="width:100%; padding:15px; border:2px dashed #3498db; border-radius:10px; background:#f0f9ff; cursor:pointer; color: #2980b9;" />
+            </div>
+            <small style="display:block; margin-top:8px; color: #95a5a6;">* تأكد أن الملف يحتوي على الحقول: Subject, LectureNumber, Questions</small>
+        </div>
+
+        <button type="submit" style="width:100%; padding:16px; background:#2ecc71; color:white; border:none; border-radius:10px; font-size: 1.1rem; font-weight:bold; cursor:pointer; transition: 0.3s; box-shadow: 0 4px 14px rgba(46, 204, 113, 0.3);">
+            ابدأ الرفع والحفظ الآن ✅
+        </button>
+    </form>
+</div>
+
+<style>
+    /* إضافة بعض الحركات للأزرار */
+    button:hover {
+        background: #27ae60 !important;
+        transform: translateY(-2px);
+    }
+
+    select:focus {
+        border-color: #3498db !important;
+    }
+</style>

@@ -1,0 +1,88 @@
+﻿@model IEnumerable<Quiz.Models.Lecture>
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="utf-8" />
+    <title>المحاضرات - @ViewBag.SubjectName</title>
+    <style>
+        :root {
+            --primary: #6a11cb;
+            --secondary: #2575fc;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            min-height: 100vh;
+            font-family: 'Segoe UI', sans-serif;
+            color: white;
+            padding: 30px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .lecture-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: 0.3s;
+            text-decoration: none;
+            color: white;
+        }
+
+            .lecture-card:hover {
+                transform: scale(1.02);
+                background: rgba(255, 255, 255, 0.25);
+            }
+
+        .btn-start {
+            background: #42e695;
+            color: #1a1a1a;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📖 محاضرات مادة: @ViewBag.SubjectName</h1>
+            <p>اختر المحاضرة المطلوبة لبدء الاختبار</p>
+        </div>
+
+        @if (Model.Any())
+        {
+            @foreach (var lecture in Model)
+            {
+                <a href="/Student/StartQuiz?lectureId=@lecture.LectureId" class="lecture-card">
+                    <div><h3>📝 @lecture.LectureTitle</h3></div>
+                    <div class="btn-start">دخول الاختبار ⚡</div>
+                </a>
+            }
+        }
+        else
+        {
+            <div style="text-align:center; background:rgba(255,0,0,0.2); padding:20px; border-radius:15px;">
+                لا توجد محاضرات مضافة لهذه المادة حالياً.
+            </div>
+        }
+    </div>
+</body>
+</html>

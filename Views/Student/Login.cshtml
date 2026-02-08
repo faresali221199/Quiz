@@ -1,0 +1,167 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>دخول الطالب - نظام الاختبارات</title>
+    <style>
+        :root {
+            --primary: #6a11cb;
+            --secondary: #2575fc;
+            --student-btn: linear-gradient(135deg, #42e695, #3bb2b8);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 20px;
+        }
+
+        .login-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            padding: 35px;
+            border-radius: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        h2 {
+            margin-bottom: 25px;
+            font-size: 1.8rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            text-align: right;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .full-width {
+            grid-column: span 2;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 0.85rem;
+            opacity: 0.9;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px 15px;
+            border-radius: 10px;
+            border: none;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            font-size: 0.95rem;
+            outline: none;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            margin-top: 20px;
+            border: none;
+            border-radius: 50px;
+            background: var(--student-btn);
+            color: white;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+            .btn-submit:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 15px 25px rgba(0,0,0,0.3);
+            }
+
+        @@media (max-width: 480px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .full-width {
+                grid-column: span 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-card">
+        <h2>🎓 بوابة تسجيل الطالب</h2>
+
+        <form action="/Student/StartSession" method="post">
+            @Html.AntiForgeryToken()
+
+            <div class="form-grid">
+                @* بيانات أساسية *@
+                <div class="form-group full-width">
+                    <label>الاسم بالكامل (كما في الكارنيه)</label>
+                    <input type="text" name="fullName" required placeholder="أحمد محمد علي..." />
+                </div>
+
+                <div class="form-group">
+                    <label>الكود الجامعي</label>
+                    <input type="text" name="academicId" required placeholder="Academic ID" />
+                </div>
+
+                <div class="form-group">
+                    <label>رقم الهاتف</label>
+                    <input type="text" name="phone" required placeholder="010XXXXXXXX" />
+                </div>
+
+                <div class="form-group">
+                    <label>السكشن</label>
+                    <input type="number" name="section" required placeholder="رقم السكشن" />
+                </div>
+
+                <div class="form-group">
+                    <label>الترم الدراسي</label>
+                    <select name="term" required>
+                        <option value="1">الترم الأول</option>
+                        <option value="2">الترم الثاني</option>
+                    </select>
+                </div>
+
+                <div class="form-group full-width">
+                    <label>السنة الدراسية</label>
+                    <select name="yearId" required>
+                        <option value="1">السنة الدراسية الأولى</option>
+                        <option value="2">السنة الدراسية الثانية</option>
+                        <option value="3">السنة الدراسية الثالثة</option>
+                        <option value="4">السنة الدراسية الرابعة</option>
+                    </select>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-submit">حفظ البيانات ودخول الاختبار 🚀</button>
+        </form>
+    </div>
+</body>
+</html>
